@@ -51,7 +51,7 @@ You will need the following things properly installed on your computer.
 
 ### Installation
 
-- `git clone https://github.com/kamilsobik/financial-app` this repository
+- `git clone https://github.com/jasokolowska/financial-app` this repository
 - tbd
 
 ### Running / Development
