@@ -29,13 +29,15 @@ tbd
 ## Tech Stack
 
 **Client:**
+- React
+- SCSS
+- HTML
 
+**Server:**
 - Java 17
 - Spring Boot
 - PostgreSql
 - Swagger
-
-**Server:**
 
 &nbsp;
 
