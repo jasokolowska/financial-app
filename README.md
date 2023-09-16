@@ -1,8 +1,8 @@
 <p>
-    <img src="https://img.shields.io/github/last-commit/kamilsobik/financial-app/main" alt="Last update">
-    <img src="https://img.shields.io/github/contributors/kamilsobik/financial-app" alt="Number of contributors">
-    <img src="https://img.shields.io/github/forks/kamilsobik/financial-app" alt="Number of forks">
-    <img src="https://img.shields.io/github/stars/kamilsobik/financial-app" alt="Number of stars">
+    <img src="https://img.shields.io/github/last-commit/jasokolowska/financial-app/main" alt="Last update">
+    <img src="https://img.shields.io/github/contributors/jasokolowska/financial-app" alt="Number of contributors">
+    <img src="https://img.shields.io/github/forks/jasokolowska/financial-app" alt="Number of forks">
+    <img src="https://img.shields.io/github/stars/jasokolowska/financial-app" alt="Number of stars">
 </p>
 
 # Financial App
@@ -22,7 +22,7 @@ Full-stack app for manag personal budget. Allows you to enter new budgets and en
 
 ## Demo
 
-See the live version of [Vercel](https://financial-app-react.vercel.app/).
+tbd
 
 &nbsp;
 
@@ -30,9 +30,10 @@ See the live version of [Vercel](https://financial-app-react.vercel.app/).
 
 **Client:**
 
-- React
-- SCSS
-- HTML
+- Java 17
+- Spring Boot
+- PostgreSql
+- Swagger
 
 **Server:**
 
