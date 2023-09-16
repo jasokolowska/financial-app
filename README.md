@@ -8,7 +8,6 @@
 # Financial App
 
 Full-stack app for manag personal budget. Allows you to enter new budgets and enter expenses divided into categories.
-
 &nbsp;
 
 ## Features
@@ -38,9 +37,7 @@ tbd
 - Spring Boot
 - PostgreSql
 - Swagger
-
 &nbsp;
-
 ## Installation
 
 ### Prerequisites
@@ -52,14 +49,12 @@ You will need the following things properly installed on your computer.
 ### Installation
 
 - `git clone https://github.com/jasokolowska/financial-app` this repository
-- tbd
+- `cd financial-app`
 
 ### Running / Development
-
-- tbd
-
+- run command `docker-compose up`
+- you can checkout basic endpoint at http://localhost:8080/hello-world
 &nbsp;
-
 ## Special thanks
 
 Thanks to our Mentors from [nowoczesnyjunior.pl](https://nowoczesnyjunior.pl/)
