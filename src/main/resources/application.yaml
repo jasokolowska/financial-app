@@ -1,3 +1,6 @@
+server:
+  port: 8080
+  forward-headers-strategy: framework
 springdoc:
   version: '@springdoc.version@'
   swagger-ui:
@@ -6,11 +9,5 @@ springdoc:
     operationsSorter: method
     disable-swagger-default-url: false
     use-root-path: true
-    url: /api-docs/openapi.yaml
   cache:
     disabled: true
-  api-docs:
-    enabled: false
-server:
-  port: 8080
-  forward-headers-strategy: framework

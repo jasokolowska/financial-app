@@ -63,9 +63,18 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
 		</dependency>
-<!--		<dependency>-->
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>RELEASE</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+		</dependency>
+		<!--		<dependency>-->
 <!--			<groupId>org.springframework.security</groupId>-->
 <!--			<artifactId>spring-security-test</artifactId>-->
 <!--			<scope>test</scope>-->
@@ -86,14 +95,15 @@
 						</goals>
 						<configuration>
 							<configOptions>
-								<interfaceOnly>true</interfaceOnly>
+								<interfaceOnly>false</interfaceOnly>
 								<useSpringBoot3>true</useSpringBoot3>
 								<openApiNullable>false</openApiNullable>
+<!--								<delegatePattern>true</delegatePattern>-->
 							</configOptions>
-							<inputSpec>src/main/resources/static/api-docs/openapi.yaml</inputSpec>
+							<inputSpec>src/main/resources/api-docs/openapi.yaml</inputSpec>
 							<generatorName>spring</generatorName>
-							<generateApiDocumentation>true</generateApiDocumentation>
-							<generateApiTests>true</generateApiTests>
+							<apiPackage>com.nowoczesnyjunior.financialapp.openapi.api</apiPackage>
+							<modelPackage>com.nowoczesnyjunior.financialapp.openapi.model</modelPackage>
 						</configuration>
 					</execution>
 				</executions>
@@ -102,6 +112,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<mainClass>com.nowoczesnyjunior.financialapp.FinancialAppApplication</mainClass>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>

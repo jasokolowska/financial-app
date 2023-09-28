@@ -5,7 +5,7 @@ info:
   description: API for managing expenses and budgets in a financial app.
 
 servers:
-  - url: /v3/api-docs
+  - url: /v3/api
     description: Production server
 tags:
   - name: expense
@@ -414,7 +414,7 @@ components:
         category:
           type: string
           description: Category
-          example: Groceries
+          example: groceries
           enum:
             - groceries
             - agd
