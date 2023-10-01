@@ -159,23 +159,63 @@ paths:
 
   /budgets:
     get:
-      tags: 
+      tags:
         - budget
       summary: Get a list of budgets
       responses:
         '200':
-          description: Successful response
+          description: Successful retrieval
+          content:
+            application/json:
+              example:
+                - budgetId: 1
+                  userId: 1
+                  budgetName: "Monthly Expenses"
+                  startDate: "2023-01-01"
+                  endDate: "2023-01-31"
+                  totalAmount: 2000.00
+                  description: "Monthly budget for expenses"
+                - budgetId: 2
+                  userId: 1
+                  budgetName: "Travel Fund"
+                  startDate: "2023-02-01"
+                  endDate: "2023-02-28"
+                  totalAmount: 1000.00
+                  description: "Budget for travel expenses"
+
     post:
-      tags: 
+      tags:
         - budget
       summary: Create a new budget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              userId: 1
+              budgetName: "Groceries"
+              startDate: "2023-03-01"
+              endDate: "2023-03-31"
+              totalAmount: 300.00
+              description: "Budget for groceries"
+
       responses:
         '201':
           description: Budget created successfully
+          content:
+            application/json:
+              example:
+                budgetId: 3
+                userId: 1
+                budgetName: "Groceries"
+                startDate: "2023-03-01"
+                endDate: "2023-03-31"
+                totalAmount: 300.00
+                description: "Budget for groceries"
 
   /budgets/{budgetId}:
     get:
-      tags: 
+      tags:
         - budget
       summary: Get a specific budget by ID
       parameters:
@@ -186,11 +226,23 @@ paths:
             type: integer
       responses:
         '200':
-          description: Successful response
+          description: Successful retrieval
+          content:
+            application/json:
+              example:
+                budgetId: 1
+                userId: 1
+                budgetName: "Monthly Expenses"
+                startDate: "2023-01-01"
+                endDate: "2023-01-31"
+                totalAmount: 2000.00
+                description: "Monthly budget for expenses"
+
         '404':
           description: Budget not found
+
     put:
-      tags: 
+      tags:
         - budget
       summary: Update a budget
       parameters:
@@ -199,13 +251,36 @@ paths:
           required: true
           schema:
             type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              budgetName: "Updated Monthly Expenses"
+              startDate: "2023-01-01"
+              endDate: "2023-01-31"
+              totalAmount: 2200.00
+              description: "Updated monthly budget for expenses"
+
       responses:
         '200':
           description: Budget updated successfully
+          content:
+            application/json:
+              example:
+                budgetId: 1
+                userId: 1
+                budgetName: "Updated Monthly Expenses"
+                startDate: "2023-01-01"
+                endDate: "2023-01-31"
+                totalAmount: 2200.00
+                description: "Updated monthly budget for expenses"
+
         '404':
           description: Budget not found
+
     delete:
-      tags: 
+      tags:
         - budget
       summary: Delete a budget
       parameters:
@@ -217,6 +292,7 @@ paths:
       responses:
         '204':
           description: Budget deleted successfully
+
   /user:
     post:
       tags:
