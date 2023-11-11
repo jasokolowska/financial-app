@@ -1,12 +1,16 @@
-package com.nowoczesnyjunior.financialapp.core.model.entities;
+package com.nowoczesnyjunior.financialapp.expensemodule.model;
 
+import com.nowoczesnyjunior.financialapp.usermodule.model.User;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 @Table(name = "expenses")
 public class Expense {
@@ -32,4 +36,18 @@ public class Expense {
     @Column(name = "description")
     private String description;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Expense expense = (Expense) o;
+        return Objects.equals(this.expenseId, expense.expenseId) &&
+                Objects.equals(this.amount, expense.amount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.expenseId, this.amount);
+    }
 }

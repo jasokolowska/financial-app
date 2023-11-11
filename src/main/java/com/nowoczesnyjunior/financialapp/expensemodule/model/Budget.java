@@ -1,12 +1,17 @@
-package com.nowoczesnyjunior.financialapp.core.model.entities;
+package com.nowoczesnyjunior.financialapp.expensemodule.model;
 
+import com.nowoczesnyjunior.financialapp.usermodule.model.User;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 @Table(name = "budgets")
 public class Budget {
@@ -35,6 +40,22 @@ public class Budget {
     private String description;
 
     @OneToMany(mappedBy = "budget")
+    @ToString.Exclude
     private List<BudgetCategoryAllocation> allocations;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Budget budget = (Budget) o;
+        return Objects.equals(this.budgetId, budget.budgetId) &&
+                Objects.equals(this.totalAmount, budget.totalAmount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.budgetId, this.totalAmount);
+    }
 }
 
