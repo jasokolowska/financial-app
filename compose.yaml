@@ -1,18 +1,30 @@
 services:
-  postgres:
+  finance-postgres:
     image: 'postgres:latest'
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      - DB_SERVER=finance-postgres
+      - POSTGRES_DB=financial_app
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
+      - POSTGRES_LOG=debug
+    volumes:
+      - finance-data:/var/lib/postgresql/data
     ports:
-      - '5432'
+      - 5432:5432
 
-  spring-boot-app:
-    image: jasokolowska/financial-app-image
+  financial-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DB_SERVER=finance-postgres
+      - POSTGRES_DB=financial_app
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
     ports:
-      - "8080:8080"
-#    environment:
-      # ...
-    depends_on:
-      - postgres
+      - 8080:8080
+    links:
+      - finance-postgres
+
+volumes:
+  finance-data:
