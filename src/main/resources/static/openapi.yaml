@@ -1,0 +1,605 @@
+openapi: 3.0.3
+info:
+  title: Financial App API
+  version: 1.0.0
+  description: API for managing expenses and budgets in a financial app.
+
+servers:
+  - url: /v3/api
+    description: Production server
+tags:
+  - name: expense
+    description: Everything about your Expenses
+  - name: budget
+    description: Everything about your Budget
+  - name: user
+    description: Operations about user
+paths:
+  /expenses:
+    post:
+      tags:
+        - expense
+      summary: Add a new expense
+      description: Add a new expense
+      operationId: addExpense
+      requestBody:
+        description: Create a new expense
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Expense'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Expense'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Expense'
+        required: true
+      responses:
+        '201':
+          description: Expense added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid input
+#      security:
+#        - financialapp_auth:
+#            - write:expenses
+#            - read:expenses
+
+    get:
+      tags:
+        - expense
+      summary: Get expenses with criteria
+      description: Get expenses based on various criteria such as time period, grouping by categories, and top 5 expenses.
+      operationId: getExpenses
+      parameters:
+        - name: start_date
+          in: query
+          description: Start date of the time period (YYYY-MM-DD)
+          schema:
+            type: string
+        - name: end_date
+          in: query
+          description: End date of the time period (YYYY-MM-DD)
+          schema:
+            type: string
+        - name: group_by_category
+          in: query
+          description: Get expensesn from given category
+          schema:
+            type: string
+        - name: top_n
+          in: query
+          description: Get the top N expenses
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Expenses retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Expense'
+        '401':
+          description: Unauthorized
+
+  /expenses/{expense_id}:
+    put:
+      tags:
+        - expense
+      summary: Edit an expense by ID
+      description: Edit an existing expense by its unique ID.
+      operationId: editExpense
+      parameters:
+        - name: expense_id
+          in: path
+          description: ID of the expense to edit
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Updated expense details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Expense'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Expense'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Expense'
+        required: true
+      responses:
+        '200':
+          description: Expense updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '401':
+          description: Unauthorized
+
+    delete:
+      tags:
+        - expense
+      summary: Delete an expense by ID
+      description: Delete an existing expense by its unique ID.
+      operationId: deleteExpense
+      parameters:
+        - name: expense_id
+          in: path
+          description: ID of the expense to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Expense deleted successfully
+        '401':
+          description: Unauthorized
+
+  /budgets:
+    post:
+      tags:
+        - budget
+      summary: Create a new budget
+      description: Create a new budget
+      operationId: createBudget
+      requestBody:
+        description: Create a new budget
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Budget'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Budget'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Budget'
+        required: true
+      responses:
+        '201':
+          description: Budget created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Budget'
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid input
+
+    get:
+      tags:
+        - budget
+      summary: Get a list of budgets
+      description: Get a list of budgets
+      operationId: getBudgets
+      responses:
+        '200':
+          description: Budgets retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Budget'
+        '401':
+          description: Unauthorized
+
+  /budgets/{budgetId}:
+    get:
+      tags:
+        - budget
+      summary: Get a specific budget by ID
+      description: Get a specific budget by its unique ID
+      operationId: getBudgetById
+      parameters:
+        - name: budgetId
+          in: path
+          description: ID of the budget to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Budget retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Budget'
+        '404':
+          description: Budget not found
+        '401':
+          description: Unauthorized
+
+    put:
+      tags:
+        - budget
+      summary: Update a budget by ID
+      description: Update an existing budget by its unique ID
+      operationId: updateBudgetById
+      parameters:
+        - name: budgetId
+          in: path
+          description: ID of the budget to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Updated budget details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Budget'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Budget'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Budget'
+        required: true
+      responses:
+        '200':
+          description: Budget updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Budget'
+        '404':
+          description: Budget not found
+        '401':
+          description: Unauthorized
+
+    delete:
+      tags:
+        - budget
+      summary: Delete a budget by ID
+      description: Delete an existing budget by its unique ID
+      operationId: deleteBudgetById
+      parameters:
+        - name: budgetId
+          in: path
+          description: ID of the budget to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Budget deleted successfully
+        '404':
+          description: Budget not found
+        '401':
+          description: Unauthorized
+
+
+  /user:
+    post:
+      tags:
+        - user
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /user/createWithList:
+    post:
+      tags:
+        - user
+      summary: Creates list of users with given input array
+      description: Creates list of users with given input array
+      operationId: createUsersWithListInput
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: successful operation
+  /user/login:
+    get:
+      tags:
+        - user
+      summary: Logs user into the system
+      description: ''
+      operationId: loginUser
+      parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: false
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid username/password supplied
+  /user/logout:
+    get:
+      tags:
+        - user
+      summary: Logs out current logged in user session
+      description: ''
+      operationId: logoutUser
+      parameters: []
+      responses:
+        default:
+          description: successful operation
+  /user/{username}:
+    get:
+      tags:
+        - user
+      summary: Get user by user name
+      description: ''
+      operationId: getUserByName
+      parameters:
+        - name: username
+          in: path
+          description: 'The name that needs to be fetched. Use user1 for testing. '
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+    put:
+      tags:
+        - user
+      summary: Update user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+        - name: username
+          in: path
+          description: name that need to be deleted
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent user in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+components:
+  schemas:
+
+    Expense: 
+      type: object
+      properties:
+        amount:
+          type: number
+          example: 198.99
+        date:
+          type: string
+          format: date-time
+        category:
+          type: object
+          $ref: '#/components/schemas/Category'
+          description: Category
+          example: groceries
+        description:
+          type: string
+          example: milk
+      xml:
+        name: expense
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Dogs
+      xml:
+        name: category
+
+    Budget:
+      type: object
+      properties:
+        budgetName:
+          type: string
+          description: The name of the budget
+        startDate:
+          type: string
+          format: date
+          description: The start date of the budget (YYYY-MM-DD)
+        endDate:
+          type: string
+          format: date
+          description: The end date of the budget (YYYY-MM-DD)
+        totalAmount:
+          type: number
+          format: double
+          description: The total amount allocated in the budget
+        description:
+          type: string
+          description: An optional description of the budget
+      required:
+        - budgetName
+        - startDate
+        - endDate
+        - totalAmount
+      example:
+        budgetName: "Monthly Expenses"
+        startDate: "2023-01-01"
+        endDate: "2023-01-31"
+        totalAmount: 2000.00
+        description: "Monthly budget for expenses"
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: theUser
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: James
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          example: '12345'
+        phone:
+          type: string
+          example: '12345'
+        userStatus:
+          type: integer
+          description: User Status
+          format: int32
+          example: 1
+      xml:
+        name: user
+    
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'
+  requestBodies:
+    Expense:
+      description: Expense object that needs to be added
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Expense'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Expense'
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+#  securitySchemes:
+#    financialapp_auth:
+#      type: oauth2
+#      flows:
+#        implicit:
+#          authorizationUrl: https://expenses.swagger.io/oauth/authorize
+#          scopes:
+#            write:expenses: modify expenses in your account
+#            read:expenses: read your expenses
+#    api_key:
+#      type: apiKey
+#      name: api_key
+#      in: header

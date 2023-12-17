@@ -12,19 +12,19 @@ services:
     ports:
       - 5432:5432
 
-  financial-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      - DB_SERVER=finance-postgres
-      - POSTGRES_DB=financial_app
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_USER=admin
-    ports:
-      - 8080:8080
-    links:
-      - finance-postgres
+#  financial-app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    environment:
+#      - DB_SERVER=finance-postgres
+#      - POSTGRES_DB=financial_app
+#      - POSTGRES_PASSWORD=admin
+#      - POSTGRES_USER=admin
+#    ports:
+#      - 8080:8080
+#    links:
+#      - finance-postgres
 
 volumes:
   finance-data:
