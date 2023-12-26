@@ -11,10 +11,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
+    public ResponseEntity<ApiResponseDto> handleException(Exception e) {
         e.printStackTrace();
-        String errorMessage = "An unexpected error occurred.";
-        return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        apiResponseDto.setCode(500);
+        apiResponseDto.setMessage(e.getMessage());
+        apiResponseDto.setType("Internal error");
+
+        return new ResponseEntity<>(apiResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(ObjectNotFoundException.class)
