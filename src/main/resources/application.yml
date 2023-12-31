@@ -14,6 +14,7 @@ spring:
           lob:
             non_contextual_creation: true
         ddl-auto: update
+        dialect: org.hibernate.dialect.PostgreSQLDialect
       show-sql: true
 springdoc:
   version: '@springdoc.version@'

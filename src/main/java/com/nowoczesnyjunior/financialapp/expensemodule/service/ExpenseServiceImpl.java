@@ -2,9 +2,12 @@ package com.nowoczesnyjunior.financialapp.expensemodule.service;
 
 import com.nowoczesnyjunior.financialapp.expensemodule.mapper.ExpenseMapper;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
+import com.nowoczesnyjunior.financialapp.expensemodule.repository.CategoryRepository;
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.ExpenseRepository;
+import com.nowoczesnyjunior.financialapp.openapi.model.CategoryDto;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
 import com.nowoczesnyjunior.financialapp.usermodule.model.User;
+import com.nowoczesnyjunior.financialapp.usermodule.repository.UserRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +20,17 @@ import java.util.Optional;
 public class ExpenseServiceImpl implements ExpenseService {
 
     private final ExpenseRepository expenseRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
     private final ExpenseMapper expenseMapper;
 
     LocalDateTime defaultStartDate = LocalDateTime.of(1900, 01, 01, 00, 00);
     LocalDateTime defaultEndDate = LocalDate.now().atStartOfDay();
 
-    public ExpenseServiceImpl(ExpenseRepository expenseRepository, ExpenseMapper expenseMapper) {
+    public ExpenseServiceImpl(ExpenseRepository expenseRepository, CategoryRepository categoryRepository, UserRepository userRepository, ExpenseMapper expenseMapper) {
         this.expenseRepository = expenseRepository;
+        this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
         this.expenseMapper = expenseMapper;
     }
 
@@ -45,9 +52,13 @@ public class ExpenseServiceImpl implements ExpenseService {
     public ExpenseDto addExpense(ExpenseDto expenseDto) {
         Expense expense = expenseMapper.dtoToModel(expenseDto);
         // TODO: get active user from usermodule
-        User user = new User();
-        user.setUserId(1L);
+        User user = userRepository.findAll().get(0);
         expense.setUser(user);
+
+        if (!isCategoryAvailable(expenseDto.getCategory())) {
+            throw new ObjectNotFoundException("Category", expenseDto.getCategory().getId());
+        }
+
         Expense savedExpense = expenseRepository.save(expense);
         return expenseMapper.expenseToExpenseDto(savedExpense);
     }
@@ -71,8 +82,11 @@ public class ExpenseServiceImpl implements ExpenseService {
         }
     }
 
-
     private LocalDateTime getLocalDateTime(String date){
         return LocalDate.parse(date).atStartOfDay();
+    }
+
+    private boolean isCategoryAvailable(CategoryDto category) {
+        return this.categoryRepository.findById(category.getId()).isPresent();
     }
 }

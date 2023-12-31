@@ -44,8 +44,16 @@ paths:
                 $ref: '#/components/schemas/Expense'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '405':
           description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 #      security:
 #        - financialapp_auth:
 #            - write:expenses
@@ -89,6 +97,10 @@ paths:
                   $ref: '#/components/schemas/Expense'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
   /expenses/{expense_id}:
     put:
@@ -127,6 +139,10 @@ paths:
                 $ref: '#/components/schemas/Expense'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
     delete:
       tags:
@@ -147,6 +163,10 @@ paths:
           description: Expense deleted successfully
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
   /budgets:
     post:
@@ -177,8 +197,16 @@ paths:
                 $ref: '#/components/schemas/Budget'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '405':
           description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
     get:
       tags:
@@ -197,6 +225,10 @@ paths:
                   $ref: '#/components/schemas/Budget'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
   /budgets/{budgetId}:
     get:
@@ -221,8 +253,16 @@ paths:
                 $ref: '#/components/schemas/Budget'
         '404':
           description: Budget not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
     put:
       tags:
@@ -259,8 +299,16 @@ paths:
                 $ref: '#/components/schemas/Budget'
         '404':
           description: Budget not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
     delete:
       tags:
@@ -280,8 +328,16 @@ paths:
           description: Budget deleted successfully
         '404':
           description: Budget not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
 
   /user:
@@ -566,10 +622,13 @@ components:
         code:
           type: integer
           format: int32
+          example: 401
         type:
           type: string
+          example: Authorization
         message:
           type: string
+          example: "You are not authorized to perform this operation"
       xml:
         name: '##default'
   requestBodies:

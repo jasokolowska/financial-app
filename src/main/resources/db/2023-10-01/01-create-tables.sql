@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS budgets (
 CREATE TABLE IF NOT EXISTS expenses (
     expense_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
-    budget_id INT NOT NULL,
-    category_id INT NOT NULL,
+    budget_id INT,
+    category_id INT,
     amount DECIMAL(10, 2) NOT NULL,
     expense_date DATE NOT NULL,
     description TEXT,
@@ -53,10 +53,10 @@ CREATE TABLE IF NOT EXISTS budget_category_allocation (
 
 --changeset jasokolowska:6
 CREATE TABLE IF NOT EXISTS incomes (
-    income_id INT  PRIMARY KEY,
+    income_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     income_date DATE NOT NULL,
     description TEXT,
-    FOREIGN KEY (user_id) REFERENCES users (user_id)
+    CONSTRAINT fk_user_incomes FOREIGN KEY (user_id) REFERENCES users (user_id)
 );

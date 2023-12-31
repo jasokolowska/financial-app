@@ -9,6 +9,7 @@ services:
       - POSTGRES_LOG=debug
     volumes:
       - finance-data:/var/lib/postgresql/data
+      - ./src/main/resources:/liquibase
     ports:
       - 5432:5432
 
