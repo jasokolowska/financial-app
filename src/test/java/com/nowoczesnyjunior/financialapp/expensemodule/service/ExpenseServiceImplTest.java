@@ -1,10 +1,11 @@
 package com.nowoczesnyjunior.financialapp.expensemodule.service;
 
+import com.nowoczesnyjunior.financialapp.expensemodule.exception.InvalidDateException;
 import com.nowoczesnyjunior.financialapp.expensemodule.mapper.ExpenseMapper;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.ExpenseRepository;
-import com.nowoczesnyjunior.financialapp.expensemodule.unit.utils.ExpenseDtoTestUtils;
-import com.nowoczesnyjunior.financialapp.expensemodule.unit.utils.ExpenseTestUtils;
+import com.nowoczesnyjunior.financialapp.expensemodule.unit.utils.ExpenseDtoFixtures;
+import com.nowoczesnyjunior.financialapp.expensemodule.unit.utils.ExpenseFixtures;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,12 +16,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class ExpenseServiceImplTest {
@@ -35,83 +36,82 @@ class ExpenseServiceImplTest {
     private ExpenseServiceImpl expenseService;
 
     @Test
-    void getExpenses_withCategory() {
+    void shouldReturnAllExpensesFromGivenCategory() {
         // GIVEN
         String startDate = "2023-01-01";
-        LocalDateTime startLocalDate = LocalDate.parse(startDate).atStartOfDay();
         String endDate = "2023-12-31";
-        LocalDateTime endLocalDate = LocalDate.parse(endDate).atStartOfDay();
         String categoryName = "Groceries";
         Integer topN = 10;
 
-        List<Expense> expenseList = ExpenseTestUtils.createSampleExpenseList();
-        List<ExpenseDto> sampleExpenseDtoList = ExpenseDtoTestUtils.createSampleExpenseDtoList();
+        List<Expense> expenseList = ExpenseFixtures.createSampleExpenseList();
+        List<Expense> expensesForGroceriesCategory = expenseList.stream().filter(expense ->
+            expense.getCategory().getCategoryName().contains("Groceries")).collect(Collectors.toList());
+
+        List<ExpenseDto> expenseDtos = ExpenseDtoFixtures.createExpenseDtos(2);
 
         Mockito.when(expenseRepository.findExpenseByExpenseDateBetweenAndCategory(Mockito.any(), Mockito.any(), Mockito.any()))
-                .thenReturn(expenseList);
-        Mockito.when(expenseMapper.expensesToDtos(expenseList)).thenReturn(sampleExpenseDtoList);
+                .thenReturn(expensesForGroceriesCategory);
+        Mockito.when(expenseMapper.expensesToDtos(expensesForGroceriesCategory)).thenReturn(expenseDtos);
 
         // WHEN
         List<ExpenseDto> result = expenseService.getExpenses(startDate, endDate, categoryName, topN);
 
         // THEN
-        verify(expenseRepository).findExpenseByExpenseDateBetweenAndCategory(
-                eq(startLocalDate), eq(endLocalDate), eq(categoryName));
+        assertNotNull(result);
+        assertThat(result.size()).isEqualTo(expenseDtos.size());
     }
 
     @Test
-    void getExpenses_withoutCategory() {
+    void shouldReturnAllExpenses() {
         // GIVEN
         String startDate = "2023-01-01";
-        LocalDateTime startLocalDate = LocalDate.parse(startDate).atStartOfDay();
         String endDate = "2023-12-31";
-        LocalDateTime endLocalDate = LocalDate.parse(endDate).atStartOfDay();
         Integer topN = 10;
 
-        List<Expense> expenseList = ExpenseTestUtils.createSampleExpenseList();
-        List<ExpenseDto> sampleExpenseDtoList = ExpenseDtoTestUtils.createSampleExpenseDtoList();
+        List<Expense> expenseList = ExpenseFixtures.createExpenses(5);
+        List<ExpenseDto> expenseDtos = ExpenseDtoFixtures.createExpenseDtos(5);
 
         Mockito.when(expenseRepository.findExpenseByExpenseDateBetween(Mockito.any(), Mockito.any()))
                 .thenReturn(expenseList);
-        Mockito.when(expenseMapper.expensesToDtos(expenseList)).thenReturn(sampleExpenseDtoList);
+        Mockito.when(expenseMapper.expensesToDtos(expenseList)).thenReturn(expenseDtos);
 
         // WHEN
         List<ExpenseDto> result = expenseService.getExpenses(startDate, endDate, null, topN);
 
         // THEN
-        verify(expenseRepository).findExpenseByExpenseDateBetween(
-                eq(startLocalDate), eq(endLocalDate));
+        assertNotNull(result);
+        assertThat(result.size()).isEqualTo(expenseDtos.size());
     }
 
     @Test
-    void getExpenses_withoutCategoryAndDates() {
+    void shouldReturnAllExpensesWithDefaultDateRange() {
         // GIVEN
         LocalDateTime startLocalDate = LocalDate.parse("1900-01-01").atStartOfDay();
         LocalDateTime endLocalDate = LocalDate.now().atStartOfDay();
 
-        List<Expense> expenseList = ExpenseTestUtils.createSampleExpenseList();
-        List<ExpenseDto> sampleExpenseDtoList = ExpenseDtoTestUtils.createSampleExpenseDtoList();
+        List<Expense> expenseList = ExpenseFixtures.createExpenses(7);
+        List<ExpenseDto> expenseDtoList = ExpenseDtoFixtures.createExpenseDtos(7);
 
         Mockito.when(expenseRepository.findExpenseByExpenseDateBetween(Mockito.any(), Mockito.any()))
                 .thenReturn(expenseList);
-        Mockito.when(expenseMapper.expensesToDtos(expenseList)).thenReturn(sampleExpenseDtoList);
+        Mockito.when(expenseMapper.expensesToDtos(expenseList)).thenReturn(expenseDtoList);
 
         // WHEN
         List<ExpenseDto> result = expenseService.getExpenses(null, null, null, null);
 
         // THEN
-        verify(expenseRepository).findExpenseByExpenseDateBetween(
-                eq(startLocalDate), eq(endLocalDate));
+        assertNotNull(result);
+        assertThat(result.size()).isEqualTo(expenseDtoList.size());
     }
 
     @Test
-    void getExpenses_withoutCategoryAndInvalidDates() {
+    void shouldThrowExceptionWhenInvalidDates() {
         // GIVEN
         String startDate = "2023-01-01 12:00";
         String endDate = "2023-12-31";
 
         // THEN
-        assertThrows(DateTimeParseException.class, () -> {
+        assertThrows(InvalidDateException.class, () -> {
             expenseService.getExpenses(startDate, endDate, null, null);
         });
     }

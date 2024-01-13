@@ -5,7 +5,7 @@ info:
   description: API for managing expenses and budgets in a financial app.
 
 servers:
-  - url: /v3/api
+  - url: /v1/api
     description: Production server
 tags:
   - name: expense

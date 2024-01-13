@@ -1,5 +1,6 @@
 package com.nowoczesnyjunior.financialapp.expensemodule.service;
 
+import com.nowoczesnyjunior.financialapp.expensemodule.exception.InvalidDateException;
 import com.nowoczesnyjunior.financialapp.expensemodule.mapper.ExpenseMapper;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.CategoryRepository;
@@ -24,7 +25,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     private final UserRepository userRepository;
     private final ExpenseMapper expenseMapper;
 
-    LocalDateTime defaultStartDate = LocalDateTime.of(1900, 01, 01, 00, 00);
+    LocalDateTime defaultStartDate = LocalDateTime.of(1970, 01, 01, 00, 00);
     LocalDateTime defaultEndDate = LocalDate.now().atStartOfDay();
 
     public ExpenseServiceImpl(ExpenseRepository expenseRepository, CategoryRepository categoryRepository, UserRepository userRepository, ExpenseMapper expenseMapper) {
@@ -83,7 +84,11 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     private LocalDateTime getLocalDateTime(String date){
-        return LocalDate.parse(date).atStartOfDay();
+        try {
+            return LocalDate.parse(date).atStartOfDay();
+        } catch (Exception e) {
+            throw new InvalidDateException(date);
+        }
     }
 
     private boolean isCategoryAvailable(CategoryDto category) {

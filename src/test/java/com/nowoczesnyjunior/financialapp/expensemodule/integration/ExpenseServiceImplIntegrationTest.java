@@ -1,17 +1,12 @@
 package com.nowoczesnyjunior.financialapp.expensemodule.integration;
 
-import com.nowoczesnyjunior.financialapp.expensemodule.mapper.ExpenseMapper;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
-import com.nowoczesnyjunior.financialapp.expensemodule.model.ExpenseCategory;
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.ExpenseRepository;
 import com.nowoczesnyjunior.financialapp.expensemodule.service.ExpenseService;
 import com.nowoczesnyjunior.financialapp.openapi.model.CategoryDto;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
-import com.nowoczesnyjunior.financialapp.usermodule.model.User;
 import com.nowoczesnyjunior.financialapp.usermodule.repository.UserRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +20,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:config/test-application.properties")
@@ -41,23 +37,29 @@ class ExpenseServiceImplIntegrationTest {
     private ExpenseService expenseService;
 
     @Test
-    void getExpenses_withCategory_shouldReturnDtos() {
+    void onRequestWithCategoryItShouldReturnExpensesForThatCategory() {
+        // WHEN
         List<ExpenseDto> result = expenseService.getExpenses("2023-01-01", "2023-12-31", "Groceries", 10);
 
+        // THEN
         assertEquals(2, result.size());
-        assertEquals("Groceries for the week", result.get(0).getDescription());
+        result.forEach(expenseDto -> assertEquals("Groceries", expenseDto.getCategory().getName()));
     }
 
     @Test
-    void getExpenses_withoutCategory_shouldReturnDtos() {
+    void onRequestWithoutCategoryItShouldReturnAllExpenses() {
+        // GIVEN
+        int allExpensesSize = expenseRepository.findAll().size();
+
+        // WHEN
         List<ExpenseDto> result = expenseService.getExpenses("2023-01-01", "2023-12-31", null, 10);
 
-        assertEquals(7, result.size());
+        // THEN
+        assertEquals(allExpensesSize, result.size());
     }
 
-    // delete
     @Test
-    void deleteExpense_withoutCategory_shouldReturnDtos() {
+    void onDeleteExistingExpenseByIdItShouldBeDeleted() {
         // GIVEN
         Expense expense = new Expense();
         expense.setExpenseDate(LocalDateTime.now());
@@ -71,12 +73,13 @@ class ExpenseServiceImplIntegrationTest {
         expenseService.deleteExpense(newExpenseId);
         int expensesQuantityAfter = expenseRepository.findAll().size();
 
+        // THEN
         assertEquals(1, expensesQuantityBefore - expensesQuantityAfter);
-        assertFalse( expenseRepository.findById(newExpenseId).isPresent());
+        assertFalse(expenseRepository.findById(newExpenseId).isPresent());
     }
-    // add
+
     @Test
-    void addNewExpense_withoutCategory_shouldReturnDtos() {
+    void onAddNewExpenseWithoutCategoryItShouldReturnExpense() {
         // GIVEN
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setId(1L);
@@ -90,15 +93,33 @@ class ExpenseServiceImplIntegrationTest {
 
         // WHEN
         ExpenseDto newExpense = expenseService.addExpense(expenseDto);
-
         List<ExpenseDto> result = expenseService.getExpenses(null, null, null, null);
 
+        // THEN
         assertEquals(8, result.size());
     }
-    // edit
 
     @Test
-    void editExpense_withoutCategory_shouldReturnDtos() {
+    void onAddNewExpenseWithoutCategoryItShouldThrowException() {
+        // GIVEN
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setId(111L);
+        categoryDto.setName("Transport");
+
+        ExpenseDto expenseDto = new ExpenseDto();
+        expenseDto.setDate(LocalDateTime.now());
+        expenseDto.setAmount(BigDecimal.valueOf(123.15));
+        expenseDto.setDescription("Fuel");
+        expenseDto.setCategory(categoryDto);
+
+        // WHEN & THEN
+        assertThrows(ObjectNotFoundException.class, () -> {
+            expenseService.addExpense(expenseDto);
+        });
+    }
+
+    @Test
+    void onEditExpenseByIdShouldReturnChangedExpense() {
         // GIVEN
         ExpenseDto expenseDto = new ExpenseDto();
         expenseDto.setDate(LocalDateTime.now());
@@ -109,6 +130,7 @@ class ExpenseServiceImplIntegrationTest {
         expenseService.editExpense(1L, expenseDto);
         Optional<Expense> result = expenseRepository.findById(1L);
 
+        // THEN
         assertEquals(true, result.isPresent());
         assertEquals("Fuel", result.get().getDescription());
     }

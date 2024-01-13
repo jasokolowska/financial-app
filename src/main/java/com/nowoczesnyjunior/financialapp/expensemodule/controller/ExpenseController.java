@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/v3/api")
+@RequestMapping(value = "/v1/api")
 public class ExpenseController implements ExpensesApi {
 
     private final ExpenseService expenseService;
