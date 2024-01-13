@@ -1,6 +1,6 @@
 package com.nowoczesnyjunior.financialapp.expensemodule.controller;
 
-import com.nowoczesnyjunior.financialapp.expensemodule.service.ExpenseService;
+import com.nowoczesnyjunior.financialapp.expensemodule.unit.service.ExpenseService;
 import com.nowoczesnyjunior.financialapp.openapi.api.ExpensesApi;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
 import org.springframework.http.ResponseEntity;

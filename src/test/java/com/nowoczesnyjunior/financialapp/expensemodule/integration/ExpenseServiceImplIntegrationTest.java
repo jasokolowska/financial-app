@@ -2,7 +2,7 @@ package com.nowoczesnyjunior.financialapp.expensemodule.integration;
 
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.ExpenseRepository;
-import com.nowoczesnyjunior.financialapp.expensemodule.service.ExpenseService;
+import com.nowoczesnyjunior.financialapp.expensemodule.unit.service.ExpenseService;
 import com.nowoczesnyjunior.financialapp.openapi.model.CategoryDto;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
 import com.nowoczesnyjunior.financialapp.usermodule.repository.UserRepository;
