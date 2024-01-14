@@ -1,4 +1,4 @@
-package com.nowoczesnyjunior.financialapp.expensemodule.unit.utils;
+package com.nowoczesnyjunior.financialapp.expensemodule.utils;
 
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.ExpenseCategory;

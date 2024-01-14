@@ -76,7 +76,7 @@ paths:
           description: End date of the time period (YYYY-MM-DD)
           schema:
             type: string
-        - name: group_by_category
+        - name: category
           in: query
           description: Get expensesn from given category
           schema:

@@ -27,10 +27,34 @@ public class GlobalExceptionHandler {
         e.printStackTrace();
 
         ApiResponseDto apiResponseDto = new ApiResponseDto();
-        apiResponseDto.setCode(404);
+        apiResponseDto.setCode(400);
         apiResponseDto.setMessage(e.getEntityName() + " with the given Id (" + e.getIdentifier().toString() + ") not found.");
-        apiResponseDto.setType("Not Found");
+        apiResponseDto.setType("Bad request");
 
-        return new ResponseEntity<>(apiResponseDto, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiResponseDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ApiResponseDto> handleCategoryNotFoundException(CategoryNotFoundException e) {
+        e.printStackTrace();
+
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        apiResponseDto.setCode(400);
+        apiResponseDto.setMessage(e.getMessage());
+        apiResponseDto.setType("Bad request");
+
+        return new ResponseEntity<>(apiResponseDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidDateException.class)
+    public ResponseEntity<ApiResponseDto> handleInvalidDateException(InvalidDateException e) {
+        e.printStackTrace();
+
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        apiResponseDto.setCode(400);
+        apiResponseDto.setMessage(e.getMessage());
+        apiResponseDto.setType("Bad request");
+
+        return new ResponseEntity<>(apiResponseDto, HttpStatus.BAD_REQUEST);
     }
 }

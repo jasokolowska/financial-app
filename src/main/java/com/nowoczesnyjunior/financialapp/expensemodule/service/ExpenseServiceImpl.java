@@ -1,5 +1,6 @@
-package com.nowoczesnyjunior.financialapp.expensemodule.unit.service;
+package com.nowoczesnyjunior.financialapp.expensemodule.service;
 
+import com.nowoczesnyjunior.financialapp.expensemodule.exception.CategoryNotFoundException;
 import com.nowoczesnyjunior.financialapp.expensemodule.exception.InvalidDateException;
 import com.nowoczesnyjunior.financialapp.expensemodule.mapper.ExpenseMapper;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
@@ -39,9 +40,10 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<ExpenseDto> getExpenses(String startDate, String endDate, String categoryName, Integer topN) {
         LocalDateTime startLocalDate = startDate != null ? getLocalDateTime(startDate) : defaultStartDate;
         LocalDateTime endLocalDate = endDate != null ? getLocalDateTime(endDate) : defaultEndDate;
-
         List<Expense> list;
+
         if (categoryName != null) {
+            validateCategory(categoryName);
             list = expenseRepository.findExpenseByExpenseDateBetweenAndCategory(startLocalDate, endLocalDate, categoryName);
         } else {
             list = expenseRepository.findExpenseByExpenseDateBetween(startLocalDate, endLocalDate);
@@ -56,8 +58,8 @@ public class ExpenseServiceImpl implements ExpenseService {
         User user = userRepository.findAll().get(0);
         expense.setUser(user);
 
-        if (!isCategoryAvailable(expenseDto.getCategory())) {
-            throw new ObjectNotFoundException("Category", expenseDto.getCategory().getId());
+        if (expenseDto.getCategory().getId() == null || !isCategoryAvailable(expenseDto.getCategory())) {
+            throw new CategoryNotFoundException();
         }
 
         Expense savedExpense = expenseRepository.save(expense);
@@ -91,7 +93,19 @@ public class ExpenseServiceImpl implements ExpenseService {
         }
     }
 
+    private void validateCategory(String categoryName) {
+        // TODO: Add UNIQUE constraint to category name
+        if (!isCategoryAvailable(categoryName)) {
+            throw new CategoryNotFoundException();
+        }
+    }
+
+
     private boolean isCategoryAvailable(CategoryDto category) {
         return this.categoryRepository.findById(category.getId()).isPresent();
+    }
+
+    private boolean isCategoryAvailable(String categoryName) {
+        return this.categoryRepository.findExpenseCategoryByCategoryName(categoryName).isPresent();
     }
 }

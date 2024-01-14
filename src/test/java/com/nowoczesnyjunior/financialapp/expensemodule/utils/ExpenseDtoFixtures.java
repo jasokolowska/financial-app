@@ -1,5 +1,6 @@
-package com.nowoczesnyjunior.financialapp.expensemodule.unit.utils;
+package com.nowoczesnyjunior.financialapp.expensemodule.utils;
 
+import com.nowoczesnyjunior.financialapp.expensemodule.model.ExpenseCategory;
 import com.nowoczesnyjunior.financialapp.openapi.model.CategoryDto;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -7,6 +8,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -34,7 +36,7 @@ public class ExpenseDtoFixtures {
         return expenseDtos;
     }
 
-    private static ExpenseDto createExpenseDto(BigDecimal amount, LocalDateTime date, CategoryDto category, String description) {
+    public static ExpenseDto createExpenseDto(BigDecimal amount, LocalDateTime date, CategoryDto category, String description) {
         ExpenseDto expenseDto = new ExpenseDto();
         expenseDto.setAmount(amount);
         expenseDto.setDate(date);
@@ -44,7 +46,12 @@ public class ExpenseDtoFixtures {
     }
 
     private static CategoryDto createSampleCategoryDto() {
-        return new CategoryDto();
+        List<String> categories = Arrays.asList("Groceries", "Transport", "Tax");
+        CategoryDto expenseCategory = new CategoryDto();
+        long catId = random.nextLong(categories.size() - 1) + 1;
+        expenseCategory.setId(catId);
+        expenseCategory.setName(categories.get((int) catId));
+        return expenseCategory;
     }
 
     private static BigDecimal getRandomAmount() {

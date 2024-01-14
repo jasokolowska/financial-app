@@ -1,4 +1,4 @@
-package com.nowoczesnyjunior.financialapp.expensemodule.unit.service;
+package com.nowoczesnyjunior.financialapp.expensemodule.service;
 
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
 

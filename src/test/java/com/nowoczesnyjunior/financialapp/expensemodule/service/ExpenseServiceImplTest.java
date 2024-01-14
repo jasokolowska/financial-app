@@ -1,11 +1,11 @@
-package com.nowoczesnyjunior.financialapp.expensemodule.unit.service;
+package com.nowoczesnyjunior.financialapp.expensemodule.service;
 
 import com.nowoczesnyjunior.financialapp.expensemodule.exception.InvalidDateException;
 import com.nowoczesnyjunior.financialapp.expensemodule.mapper.ExpenseMapper;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.ExpenseRepository;
-import com.nowoczesnyjunior.financialapp.expensemodule.unit.utils.ExpenseDtoFixtures;
-import com.nowoczesnyjunior.financialapp.expensemodule.unit.utils.ExpenseFixtures;
+import com.nowoczesnyjunior.financialapp.expensemodule.utils.ExpenseDtoFixtures;
+import com.nowoczesnyjunior.financialapp.expensemodule.utils.ExpenseFixtures;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
