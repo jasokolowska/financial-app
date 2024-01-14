@@ -17,13 +17,13 @@ VALUES
 
 INSERT INTO expenses (user_id, budget_id, category_id, amount, expense_date, description)
 VALUES
-    (1, 1, 1, 150.00, '2023-01-05', 'Groceries for the week'),
-    (2, 2, 2, 50.00, '2023-01-10', 'Electricity bill'),
-    (1, 1, 1, 150.00, '2023-01-05', 'Groceries for the week'),
-    (2, 2, 2, 50.00, '2023-07-17', 'Electricity bill'),
-    (2, 2, 2, 123.00, '2023-12-10', 'Toys'),
-    (2, 2, 2, 14.99, '2023-08-10', 'Cleaning'),
-    (2, 2, 2, 200.23, '2023-01-10', 'Hairdresser');
+    (1, 1, 1, 150.00, '2023-01-05T13:01:58.618Z', 'Groceries for the week'),
+    (2, 2, 2, 50.00, '2023-01-10T13:01:58.618Z', 'Electricity bill'),
+    (1, 1, 1, 150.00, '2023-01-05T13:01:58.618Z', 'Groceries for the week'),
+    (2, 2, 2, 50.00, '2023-07-17T13:01:58.618Z', 'Electricity bill'),
+    (2, 2, 2, 123.00, '2023-12-10T13:01:58.618Z', 'Toys'),
+    (2, 2, 2, 14.99, '2023-08-10T13:01:58.618Z', 'Cleaning'),
+    (2, 2, 2, 200.23, '2023-01-10T13:01:58.618Z', 'Hairdresser');
 
 INSERT INTO budget_category_allocation ( budget_id, category_id, allocated_amount)
 VALUES

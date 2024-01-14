@@ -5,6 +5,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.text.SimpleDateFormat;
+
 @Configuration
 public class ObjectMapperConfig {
 
@@ -12,6 +14,10 @@ public class ObjectMapperConfig {
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
+
+        // Providing correct mapping between LocalDateTime and Json Object
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+        objectMapper.setDateFormat(df);
         return objectMapper;
     }
 }

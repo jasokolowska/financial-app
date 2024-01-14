@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
 --changeset jasokolowska:2
 CREATE TABLE IF NOT EXISTS expense_categories (
     category_id SERIAL PRIMARY KEY,
-    category_name VARCHAR(255) NOT NULL
+    category_name VARCHAR(255) UNIQUE NOT NULL
 );
 
 --changeset jasokolowska:4
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS expenses (
     budget_id INT,
     category_id INT,
     amount DECIMAL(10, 2) NOT NULL,
-    expense_date DATE NOT NULL,
+    expense_date TIMESTAMP NOT NULL,
     description TEXT,
     CONSTRAINT fk_user_expense FOREIGN KEY (user_id) REFERENCES users (user_id),
     CONSTRAINT fk_budget_expense FOREIGN KEY (budget_id) REFERENCES budgets (budget_id),
