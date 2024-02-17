@@ -10,6 +10,7 @@ import com.nowoczesnyjunior.financialapp.openapi.model.CategoryDto;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
 import com.nowoczesnyjunior.financialapp.usermodule.model.User;
 import com.nowoczesnyjunior.financialapp.usermodule.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ExpenseServiceImpl implements ExpenseService {
 
     private final ExpenseRepository expenseRepository;
@@ -29,41 +31,35 @@ public class ExpenseServiceImpl implements ExpenseService {
     LocalDateTime defaultStartDate = LocalDateTime.of(1970, 01, 01, 00, 00);
     LocalDateTime defaultEndDate = LocalDate.now().atStartOfDay();
 
-    public ExpenseServiceImpl(ExpenseRepository expenseRepository, CategoryRepository categoryRepository, UserRepository userRepository, ExpenseMapper expenseMapper) {
-        this.expenseRepository = expenseRepository;
-        this.categoryRepository = categoryRepository;
-        this.userRepository = userRepository;
-        this.expenseMapper = expenseMapper;
-    }
-
     @Override
     public List<ExpenseDto> getExpenses(String startDate, String endDate, String categoryName, Integer topN) {
         LocalDateTime startLocalDate = startDate != null ? getLocalDateTime(startDate) : defaultStartDate;
         LocalDateTime endLocalDate = endDate != null ? getLocalDateTime(endDate) : defaultEndDate;
-        List<Expense> list;
+        List<Expense> expenses;
 
         if (categoryName != null) {
             validateCategory(categoryName);
-            list = expenseRepository.findExpenseByExpenseDateBetweenAndCategory(startLocalDate, endLocalDate, categoryName);
+            expenses = expenseRepository.findExpensesByExpenseDateBetweenAndCategory_CategoryName(startLocalDate,
+                    endLocalDate, categoryName);
         } else {
-            list = expenseRepository.findExpenseByExpenseDateBetween(startLocalDate, endLocalDate);
+            expenses = expenseRepository.findExpenseByExpenseDateBetween(startLocalDate, endLocalDate);
         }
-        return expenseMapper.expensesToDtos(list);
+        return expenseMapper.toDtoList(expenses);
     }
 
     @Override
     public ExpenseDto addExpense(ExpenseDto expenseDto) {
-        Expense expense = expenseMapper.dtoToModel(expenseDto);
+        Expense expense = expenseMapper.toModel(expenseDto);
         // TODO: get active user from usermodule
         User user = userRepository.findAll().get(0);
         expense.setUser(user);
 
-        if (expenseDto.getCategory().getId() == null || !isCategoryAvailable(expenseDto.getCategory())) {
+        if (expenseDto.getCategory().getId() == null || !categoryExists(expenseDto.getCategory())) {
             throw new CategoryNotFoundException();
         }
 
         Expense savedExpense = expenseRepository.save(expense);
-        return expenseMapper.expenseToExpenseDto(savedExpense);
+        return expenseMapper.toDto(savedExpense);
     }
 
     @Override
@@ -73,19 +69,19 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public ExpenseDto editExpense(Long expenseId, ExpenseDto expenseDto) {
-        Optional<Expense> oldExpence = expenseRepository.findById(expenseId);
-        if (oldExpence.isPresent()) {
-            Expense expense = expenseMapper.dtoToModel(expenseDto);
+        Optional<Expense> oldExpenceOptional = expenseRepository.findById(expenseId);
+        if (oldExpenceOptional.isPresent()) {
+            Expense expense = expenseMapper.toModel(expenseDto);
             expense.setExpenseId(expenseId);
-            expense.setUser(oldExpence.get().getUser());
+            expense.setUser(oldExpenceOptional.get().getUser());
             Expense savedExpense = expenseRepository.save(expense);
-            return expenseMapper.expenseToExpenseDto(savedExpense);
+            return expenseMapper.toDto(savedExpense);
         } else {
-            throw new ObjectNotFoundException( "Expense", expenseId);
+            throw new ObjectNotFoundException("Expense", expenseId);
         }
     }
 
-    private LocalDateTime getLocalDateTime(String date){
+    private LocalDateTime getLocalDateTime(String date) {
         try {
             return LocalDate.parse(date).atStartOfDay();
         } catch (Exception e) {
@@ -95,17 +91,17 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     private void validateCategory(String categoryName) {
         // TODO: Add UNIQUE constraint to category name
-        if (!isCategoryAvailable(categoryName)) {
+        if (!categoryExists(categoryName)) {
             throw new CategoryNotFoundException();
         }
     }
 
 
-    private boolean isCategoryAvailable(CategoryDto category) {
+    private boolean categoryExists(CategoryDto category) {
         return this.categoryRepository.findById(category.getId()).isPresent();
     }
 
-    private boolean isCategoryAvailable(String categoryName) {
+    private boolean categoryExists(String categoryName) {
         return this.categoryRepository.findExpenseCategoryByCategoryName(categoryName).isPresent();
     }
 }

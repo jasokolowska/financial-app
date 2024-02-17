@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.ExpenseRepository;
 import com.nowoczesnyjunior.financialapp.expensemodule.utils.ExpenseDtoFixtures;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
-import org.checkerframework.checker.regex.qual.Regex;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

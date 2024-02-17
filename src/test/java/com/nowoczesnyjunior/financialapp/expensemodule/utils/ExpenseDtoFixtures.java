@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ExpenseDtoFixtures {
 
@@ -19,10 +21,9 @@ public class ExpenseDtoFixtures {
     public static List<ExpenseDto> createExpenseDtos(int quantity) {
         List<ExpenseDto> expenseDtos = new ArrayList<>();
 
-        for (int i = 0; i < quantity; i++) {
-            expenseDtos.add(createExpenseDto(getRandomAmount(), getRandomLocalDate(), createSampleCategoryDto(), getRandomDescription()));
-        }
-        return expenseDtos;
+        return IntStream.range(0, quantity)
+                .mapToObj(i -> createExpenseDto(getRandomAmount(), getRandomLocalDate(), createSampleCategoryDto(), getRandomDescription()))
+                .collect(Collectors.toList());
     }
 
 

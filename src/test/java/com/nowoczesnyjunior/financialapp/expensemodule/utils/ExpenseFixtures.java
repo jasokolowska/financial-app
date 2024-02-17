@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ExpenseFixtures {
 
@@ -19,23 +21,27 @@ public class ExpenseFixtures {
     public static List<Expense> createExpenses(int quantity) {
         List<Expense> expenses = new ArrayList<>();
 
-        for (int i = 0; i < quantity; i++) {
-            expenses.add(createExpense(createSampleUser(), createSampleCategory(), getRandomAmount(), getRandomLocalDate(), getRandomDescription()));
-        }
-        return expenses;
+        return IntStream.range(0, quantity)
+                .mapToObj(i -> createExpense(createSampleUser(), createSampleCategory(), getRandomAmount(),
+                        getRandomLocalDate(), getRandomDescription()))
+                .collect(Collectors.toList());
     }
 
     public static List<Expense> createSampleExpenseList() {
         List<Expense> expenses = new ArrayList<>();
 
-        expenses.add(createExpense(createSampleUser(), createSampleCategory(), BigDecimal.valueOf(50.0), LocalDateTime.of(2023, 1, 15, 12, 0), "Groceries"));
-        expenses.add(createExpense(createSampleUser(), createSampleCategory(), BigDecimal.valueOf(30.5), LocalDateTime.of(2023, 2, 5, 15, 30), "Entertainment"));
-        expenses.add(createExpense(createSampleUser(), createSampleCategory(), BigDecimal.valueOf(100.0), LocalDateTime.of(2023, 3, 20, 9, 45), "Utilities"));
+        expenses.add(createExpense(createSampleUser(), createSampleCategory(), BigDecimal.valueOf(50.0),
+                LocalDateTime.of(2023, 1, 15, 12, 0), "Groceries"));
+        expenses.add(createExpense(createSampleUser(), createSampleCategory(), BigDecimal.valueOf(30.5),
+                LocalDateTime.of(2023, 2, 5, 15, 30), "Entertainment"));
+        expenses.add(createExpense(createSampleUser(), createSampleCategory(), BigDecimal.valueOf(100.0),
+                LocalDateTime.of(2023, 3, 20, 9, 45), "Utilities"));
 
         return expenses;
     }
 
-    private static Expense createExpense(User user, ExpenseCategory category, BigDecimal amount, LocalDateTime expenseDate, String description) {
+    private static Expense createExpense(User user, ExpenseCategory category, BigDecimal amount,
+                                         LocalDateTime expenseDate, String description) {
         Expense expense = new Expense();
         expense.setUser(user);
         expense.setCategory(category);

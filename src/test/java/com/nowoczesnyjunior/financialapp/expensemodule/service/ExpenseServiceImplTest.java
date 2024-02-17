@@ -49,9 +49,9 @@ class ExpenseServiceImplTest {
 
         List<ExpenseDto> expenseDtos = ExpenseDtoFixtures.createExpenseDtos(2);
 
-        Mockito.when(expenseRepository.findExpenseByExpenseDateBetweenAndCategory(Mockito.any(), Mockito.any(), Mockito.any()))
+        Mockito.when(expenseRepository.findExpensesByExpenseDateBetweenAndCategory_CategoryName(Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(expensesForGroceriesCategory);
-        Mockito.when(expenseMapper.expensesToDtos(expensesForGroceriesCategory)).thenReturn(expenseDtos);
+        Mockito.when(expenseMapper.toDtoList(expensesForGroceriesCategory)).thenReturn(expenseDtos);
 
         // WHEN
         List<ExpenseDto> result = expenseService.getExpenses(startDate, endDate, categoryName, topN);
@@ -73,7 +73,7 @@ class ExpenseServiceImplTest {
 
         Mockito.when(expenseRepository.findExpenseByExpenseDateBetween(Mockito.any(), Mockito.any()))
                 .thenReturn(expenseList);
-        Mockito.when(expenseMapper.expensesToDtos(expenseList)).thenReturn(expenseDtos);
+        Mockito.when(expenseMapper.toDtoList(expenseList)).thenReturn(expenseDtos);
 
         // WHEN
         List<ExpenseDto> result = expenseService.getExpenses(startDate, endDate, null, topN);
@@ -94,7 +94,7 @@ class ExpenseServiceImplTest {
 
         Mockito.when(expenseRepository.findExpenseByExpenseDateBetween(Mockito.any(), Mockito.any()))
                 .thenReturn(expenseList);
-        Mockito.when(expenseMapper.expensesToDtos(expenseList)).thenReturn(expenseDtoList);
+        Mockito.when(expenseMapper.toDtoList(expenseList)).thenReturn(expenseDtoList);
 
         // WHEN
         List<ExpenseDto> result = expenseService.getExpenses(null, null, null, null);

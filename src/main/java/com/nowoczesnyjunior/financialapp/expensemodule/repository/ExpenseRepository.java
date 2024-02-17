@@ -22,4 +22,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             @Param("endDate") LocalDateTime endDate,
             @Param("categoryName") String categoryName);
 
+    List<Expense> findExpensesByExpenseDateBetweenAndCategory_CategoryName(LocalDateTime startDate, LocalDateTime endDate, String categoryName);
+
 }
