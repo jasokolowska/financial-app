@@ -5,7 +5,7 @@ info:
   description: API for managing expenses and budgets in a financial app.
 
 servers:
-  - url: /v3/api
+  - url: /v1/api
     description: Production server
 tags:
   - name: expense
@@ -41,14 +41,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Expense'          
-            application/xml:
-              schema:
                 $ref: '#/components/schemas/Expense'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '405':
           description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 #      security:
 #        - financialapp_auth:
 #            - write:expenses
@@ -71,11 +76,11 @@ paths:
           description: End date of the time period (YYYY-MM-DD)
           schema:
             type: string
-        - name: group_by_category
+        - name: category
           in: query
-          description: Group expenses by categories
+          description: Get expensesn from given category
           schema:
-            type: boolean
+            type: string
         - name: top_n
           in: query
           description: Get the top N expenses
@@ -90,13 +95,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Expense'
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Expense'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
   /expenses/{expense_id}:
     put:
@@ -112,6 +116,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       requestBody:
         description: Updated expense details
         content:
@@ -132,11 +137,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Expense'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Expense'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
     delete:
       tags:
@@ -151,11 +157,16 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       responses:
         '204':
           description: Expense deleted successfully
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
   /budgets:
     post:
@@ -184,13 +195,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Budget'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Budget'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '405':
           description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
     get:
       tags:
@@ -207,13 +223,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Budget'
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Budget'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
   /budgets/{budgetId}:
     get:
@@ -236,13 +251,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Budget'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Budget'
         '404':
           description: Budget not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
     put:
       tags:
@@ -277,13 +297,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Budget'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Budget'
         '404':
           description: Budget not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
     delete:
       tags:
@@ -303,8 +328,16 @@ paths:
           description: Budget deleted successfully
         '404':
           description: Budget not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 
 
   /user:
@@ -333,9 +366,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/User'
   /user/createWithList:
     post:
       tags:
@@ -355,9 +385,6 @@ paths:
           description: Successful operation
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/User'
         default:
@@ -397,9 +424,6 @@ paths:
                 type: string
                 format: date-time
           content:
-            application/xml:
-              schema:
-                type: string
             application/json:
               schema:
                 type: string
@@ -503,13 +527,10 @@ components:
           type: string
           format: date-time
         category:
-          type: string
+          type: object
+          $ref: '#/components/schemas/Category'
           description: Category
           example: groceries
-          enum:
-            - groceries
-            - agd
-            - tax
         description:
           type: string
           example: milk
@@ -601,10 +622,13 @@ components:
         code:
           type: integer
           format: int32
+          example: 401
         type:
           type: string
+          example: Authorization
         message:
           type: string
+          example: "You are not authorized to perform this operation"
       xml:
         name: '##default'
   requestBodies:
