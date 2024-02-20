@@ -1,7 +1,6 @@
 package com.nowoczesnyjunior.financialapp.expensemodule.model;
 
 
-
 import com.nowoczesnyjunior.financialapp.usermodule.model.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -20,7 +19,6 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 

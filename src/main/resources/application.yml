@@ -26,3 +26,9 @@ springdoc:
     use-root-path: true
   cache:
     disabled: true
+logging:
+  level:
+    org.springframework.security: DEBUG
+jwt:
+  expirationTime: 3600000
+  secret: 7e3f4e569ab32d8a6a8b33b1f3a0d2c9
