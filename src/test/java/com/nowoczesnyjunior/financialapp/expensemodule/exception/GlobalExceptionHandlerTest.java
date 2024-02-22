@@ -1,5 +1,6 @@
 package com.nowoczesnyjunior.financialapp.expensemodule.exception;
 
+import com.nowoczesnyjunior.financialapp.common.GlobalExceptionHandler;
 import com.nowoczesnyjunior.financialapp.openapi.model.ApiResponseDto;
 import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;

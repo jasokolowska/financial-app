@@ -1,46 +1,36 @@
 package com.nowoczesnyjunior.financialapp.usermodule.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.nowoczesnyjunior.financialapp.usermodule.model.LoginCredentials;
-import com.nowoczesnyjunior.financialapp.usermodule.model.Token;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.nowoczesnyjunior.financialapp.openapi.api.UserApi;
+import com.nowoczesnyjunior.financialapp.openapi.model.CredentialDetailsDto;
+import com.nowoczesnyjunior.financialapp.openapi.model.RegisterDetailsDto;
+import com.nowoczesnyjunior.financialapp.openapi.model.TokenDto;
+import com.nowoczesnyjunior.financialapp.usermodule.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-
 @RestController
-public class LoginController {
+public class LoginController implements UserApi {
 
-    private final AuthenticationManager authenticationManager;
+    private final UserService userService;
 
-    private final long expirationTime;
-    private final String secret;
-
-    public LoginController(AuthenticationManager authenticationManager, @Value("${jwt.expirationTime}") long expirationTime,
-                           @Value("${jwt.secret}") String secret) {
-        this.authenticationManager = authenticationManager;
-        this.expirationTime = expirationTime;
-        this.secret = secret;
+    public LoginController(UserService userService) {
+        this.userService = userService;
     }
 
-    @PostMapping("/login")
-    public Token login(@RequestBody LoginCredentials credentials) {
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(credentials.username(),
-                credentials.password()));
+    @Override
+    public ResponseEntity<TokenDto> createUser(RegisterDetailsDto registerDetailsDto) {
+        userService.createNewUser(registerDetailsDto.getUsername(), registerDetailsDto.getPassword(),
+                registerDetailsDto.getRepeatedPassword());
+        TokenDto tokenDto = userService.authenticate(registerDetailsDto.getUsername(),
+                registerDetailsDto.getPassword());
+        return ResponseEntity.ok(tokenDto);
+    }
 
-        UserDetails principal = (UserDetails) authenticate.getPrincipal();
-        String tokenString = JWT.create()
-                .withSubject(principal.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
-                .sign(Algorithm.HMAC256(secret));
-        return new Token(tokenString);
+
+    @Override
+    public ResponseEntity<TokenDto> loginUser(CredentialDetailsDto credentialDetailsDto) {
+        TokenDto tokenDto = userService.authenticate(credentialDetailsDto.getUsername(),
+                credentialDetailsDto.getPassword());
+        return ResponseEntity.ok(tokenDto);
     }
 }

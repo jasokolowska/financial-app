@@ -2,28 +2,23 @@ package com.nowoczesnyjunior.financialapp.usermodule.model;
 
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Budget;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -40,6 +35,19 @@ public class User {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @Column(nullable = false)
+    private boolean enabled;
+
+    @Column(unique = true)
+    @UuidGenerator
+    private UUID uuid;
+
+    @ElementCollection
+    @CollectionTable(name = "authorities", joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"))
+    @Column(name = "authority")
+    @Enumerated(EnumType.STRING)
+    private List<UserRole> authorities;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @ToString.Exclude
