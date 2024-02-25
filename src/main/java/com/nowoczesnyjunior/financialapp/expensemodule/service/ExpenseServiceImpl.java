@@ -49,14 +49,14 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public ExpenseDto addExpense(ExpenseDto expenseDto) {
+        if (expenseDto.getCategory().getId() == null || !categoryExists(expenseDto.getCategory())) {
+            throw new CategoryNotFoundException();
+        }
+
         Expense expense = expenseMapper.toModel(expenseDto);
         // TODO: get active user from usermodule
         User user = userRepository.findAll().get(0);
         expense.setUser(user);
-
-        if (expenseDto.getCategory().getId() == null || !categoryExists(expenseDto.getCategory())) {
-            throw new CategoryNotFoundException();
-        }
 
         Expense savedExpense = expenseRepository.save(expense);
         return expenseMapper.toDto(savedExpense);

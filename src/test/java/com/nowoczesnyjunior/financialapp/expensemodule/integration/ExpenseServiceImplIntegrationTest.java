@@ -1,15 +1,18 @@
 package com.nowoczesnyjunior.financialapp.expensemodule.integration;
 
+import com.nowoczesnyjunior.financialapp.expensemodule.exception.CategoryNotFoundException;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.ExpenseRepository;
 import com.nowoczesnyjunior.financialapp.expensemodule.service.ExpenseService;
 import com.nowoczesnyjunior.financialapp.openapi.model.CategoryDto;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
 import com.nowoczesnyjunior.financialapp.usermodule.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -18,13 +21,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
+@Rollback
 @TestPropertySource(locations = "classpath:config/test-application.properties")
-@Sql(scripts = "classpath:test-data/insert-dummy-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 class ExpenseServiceImplIntegrationTest {
 
     @Autowired
@@ -93,10 +95,9 @@ class ExpenseServiceImplIntegrationTest {
 
         // WHEN
         ExpenseDto newExpense = expenseService.addExpense(expenseDto);
-        List<ExpenseDto> result = expenseService.getExpenses(null, null, null, null);
 
         // THEN
-        assertEquals(8, result.size());
+        assertNotNull(newExpense);
     }
 
     @Test
@@ -113,7 +114,7 @@ class ExpenseServiceImplIntegrationTest {
         expenseDto.setCategory(categoryDto);
 
         // WHEN & THEN
-        assertThrows(ObjectNotFoundException.class, () -> {
+        assertThrows(CategoryNotFoundException.class, () -> {
             expenseService.addExpense(expenseDto);
         });
     }

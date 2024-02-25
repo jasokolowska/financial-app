@@ -11,7 +11,7 @@ import org.mapstruct.MappingConstants;
 
 import java.util.List;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {CategoryDto.class, ExpenseCategory.class})
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {CategoryMapper.class})
 public interface ExpenseMapper {
 
     @Mapping(target = "date", source = "expenseDate")

@@ -27,11 +27,11 @@ public class GlobalExceptionHandler {
         e.printStackTrace();
 
         ApiResponseDto apiResponseDto = new ApiResponseDto();
-        apiResponseDto.setCode(400);
+        apiResponseDto.setCode(404);
         apiResponseDto.setMessage(e.getEntityName() + " with the given Id (" + e.getIdentifier().toString() + ") not found.");
-        apiResponseDto.setType("Bad request");
+        apiResponseDto.setType("Not Found");
 
-        return new ResponseEntity<>(apiResponseDto, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiResponseDto, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(CategoryNotFoundException.class)

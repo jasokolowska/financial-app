@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.ExpenseRepository;
 import com.nowoczesnyjunior.financialapp.expensemodule.utils.ExpenseDtoFixtures;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -26,7 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:config/test-application.properties")
-@Sql(scripts = "classpath:test-data/insert-dummy-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Transactional
+@Rollback
 @WebAppConfiguration
 class ExpenseControllerTest {
 
