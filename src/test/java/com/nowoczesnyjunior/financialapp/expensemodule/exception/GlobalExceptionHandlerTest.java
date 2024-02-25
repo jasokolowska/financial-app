@@ -39,8 +39,7 @@ class GlobalExceptionHandlerTest {
     @Test
     void  shouldReturnNotFound() {
         ObjectNotFoundException objectNotFoundException = mock(ObjectNotFoundException.class);
-        when(objectNotFoundException.getEntityName()).thenReturn("Entity");
-        when(objectNotFoundException.getIdentifier()).thenReturn(123);
+        when(objectNotFoundException.getMessage()).thenReturn("Entity with the given Id (123) not found.");
 
         ResponseEntity<ApiResponseDto> responseEntity = globalExceptionHandler.handleEntityNotFoundException(objectNotFoundException);
 

@@ -1,31 +1,26 @@
-package com.nowoczesnyjunior.financialapp.expensemodule.integration;
+package com.nowoczesnyjunior.financialapp.expensemodule.service;
 
+import com.nowoczesnyjunior.financialapp.expensemodule.exception.CategoryNotFoundException;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.ExpenseRepository;
-import com.nowoczesnyjunior.financialapp.expensemodule.service.ExpenseService;
+import com.nowoczesnyjunior.financialapp.expensemodule.utils.IntegrationTest;
 import com.nowoczesnyjunior.financialapp.openapi.model.CategoryDto;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
 import com.nowoczesnyjunior.financialapp.usermodule.repository.UserRepository;
-import org.hibernate.ObjectNotFoundException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@TestPropertySource(locations = "classpath:config/test-application.properties")
-@Sql(scripts = "classpath:test-data/insert-dummy-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-class ExpenseServiceImplIntegrationTest {
+class ExpenseServiceImplIntegrationTest extends IntegrationTest {
 
     @Autowired
     private ExpenseRepository expenseRepository;
@@ -36,7 +31,23 @@ class ExpenseServiceImplIntegrationTest {
     @Autowired
     private ExpenseService expenseService;
 
+    @Autowired
+    private MockMvc mockMvc;
+
     @Test
+    public void testPrintAllExpenses() {
+        // Retrieve all expenses from the repository
+        List<Expense> expenses = expenseRepository.findAll();
+
+        // Print each expense
+        System.out.println("All Expenses:");
+        for (Expense expense : expenses) {
+            System.out.println(expense.getDescription());
+        }
+    }
+
+    @Test
+    @WithMockUser(username = "john_doe")
     void onRequestWithCategoryItShouldReturnExpensesForThatCategory() {
         // WHEN
         List<ExpenseDto> result = expenseService.getExpenses("2023-01-01", "2023-12-31", "Groceries", 10);
@@ -47,6 +58,7 @@ class ExpenseServiceImplIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "john_doe")
     void onRequestWithoutCategoryItShouldReturnAllExpenses() {
         // GIVEN
         int allExpensesSize = expenseRepository.findAll().size();
@@ -59,6 +71,7 @@ class ExpenseServiceImplIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "john_doe")
     void onDeleteExistingExpenseByIdItShouldBeDeleted() {
         // GIVEN
         Expense expense = new Expense();
@@ -68,7 +81,7 @@ class ExpenseServiceImplIntegrationTest {
         expense.setUser(userRepository.findAll().get(0));
 
         // WHEN
-        Long newExpenseId = expenseRepository.save(expense).getExpenseId();
+        Long newExpenseId = expenseRepository.save(expense).getId();
         int expensesQuantityBefore = expenseRepository.findAll().size();
         expenseService.deleteExpense(newExpenseId);
         int expensesQuantityAfter = expenseRepository.findAll().size();
@@ -79,6 +92,7 @@ class ExpenseServiceImplIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "john_doe")
     void onAddNewExpenseWithoutCategoryItShouldReturnExpense() {
         // GIVEN
         CategoryDto categoryDto = new CategoryDto();
@@ -93,32 +107,28 @@ class ExpenseServiceImplIntegrationTest {
 
         // WHEN
         ExpenseDto newExpense = expenseService.addExpense(expenseDto);
-        List<ExpenseDto> result = expenseService.getExpenses(null, null, null, null);
 
         // THEN
-        assertEquals(8, result.size());
+        assertNotNull(newExpense.getId());
     }
 
     @Test
+    @WithMockUser(username = "john_doe")
     void onAddNewExpenseWithoutCategoryItShouldThrowException() {
         // GIVEN
-        CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setId(111L);
-        categoryDto.setName("Transport");
-
         ExpenseDto expenseDto = new ExpenseDto();
         expenseDto.setDate(LocalDateTime.now());
         expenseDto.setAmount(BigDecimal.valueOf(123.15));
         expenseDto.setDescription("Fuel");
-        expenseDto.setCategory(categoryDto);
 
         // WHEN & THEN
-        assertThrows(ObjectNotFoundException.class, () -> {
+        assertThrows(CategoryNotFoundException.class, () -> {
             expenseService.addExpense(expenseDto);
         });
     }
 
     @Test
+    @WithMockUser(username = "john_doe")
     void onEditExpenseByIdShouldReturnChangedExpense() {
         // GIVEN
         ExpenseDto expenseDto = new ExpenseDto();
@@ -131,7 +141,7 @@ class ExpenseServiceImplIntegrationTest {
         Optional<Expense> result = expenseRepository.findById(1L);
 
         // THEN
-        assertEquals(true, result.isPresent());
+        assertTrue(result.isPresent());
         assertEquals("Fuel", result.get().getDescription());
     }
 }

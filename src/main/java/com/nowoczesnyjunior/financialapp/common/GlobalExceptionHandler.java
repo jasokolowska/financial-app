@@ -32,8 +32,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ObjectNotFoundException.class)
     public ResponseEntity<ApiResponseDto> handleEntityNotFoundException(ObjectNotFoundException e) {
         logger.error(e.getLocalizedMessage());
-        ApiResponseDto apiResponseDto = getApiResponseDto(400, e.getMessage(), "Bad request");
-        return new ResponseEntity<>(apiResponseDto, HttpStatus.BAD_REQUEST);
+        ApiResponseDto apiResponseDto = getApiResponseDto(404, e.getMessage(), "Not Found");
+        return new ResponseEntity<>(apiResponseDto, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(CategoryNotFoundException.class)

@@ -39,10 +39,6 @@ public class User implements Serializable {
     @Column(nullable = false)
     private boolean enabled;
 
-    @Column(unique = true)
-    @UuidGenerator
-    private UUID uuid;
-
     @ElementCollection
     @CollectionTable(name = "authorities", joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"))
     @Column(name = "authority")

@@ -9,5 +9,4 @@ SET enabled = true;
 
 --changeset jasokolowska:12
 ALTER TABLE users
-    ALTER COLUMN enabled SET NOT NULL,
-    ALTER COLUMN enabled SET DEFAULT true;
+    ALTER COLUMN enabled SET NOT NULL;

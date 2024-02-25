@@ -3,6 +3,8 @@ package com.nowoczesnyjunior.financialapp.expensemodule.service;
 import com.nowoczesnyjunior.financialapp.expensemodule.exception.InvalidDateException;
 import com.nowoczesnyjunior.financialapp.expensemodule.mapper.ExpenseMapper;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
+import com.nowoczesnyjunior.financialapp.expensemodule.model.ExpenseCategory;
+import com.nowoczesnyjunior.financialapp.expensemodule.repository.CategoryRepository;
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.ExpenseRepository;
 import com.nowoczesnyjunior.financialapp.expensemodule.utils.ExpenseDtoFixtures;
 import com.nowoczesnyjunior.financialapp.expensemodule.utils.ExpenseFixtures;
@@ -17,17 +19,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 class ExpenseServiceImplTest {
 
     @Mock
     private ExpenseRepository expenseRepository;
+
+    @Mock
+    private CategoryRepository categoryRepository;
 
     @Mock
     private ExpenseMapper expenseMapper;
@@ -42,16 +49,21 @@ class ExpenseServiceImplTest {
         String endDate = "2023-12-31";
         String categoryName = "Groceries";
         Integer topN = 10;
+        ExpenseCategory category = new ExpenseCategory();
+        category.setCategoryId(8L);
+        category.setCategoryName("Groceries");
 
         List<Expense> expenseList = ExpenseFixtures.createSampleExpenseList();
         List<Expense> expensesForGroceriesCategory = expenseList.stream().filter(expense ->
             expense.getCategory().getCategoryName().contains("Groceries")).collect(Collectors.toList());
+        Optional<ExpenseCategory> expenseCategory = Optional.of(category);
 
         List<ExpenseDto> expenseDtos = ExpenseDtoFixtures.createExpenseDtos(2);
 
-        Mockito.when(expenseRepository.findExpensesByExpenseDateBetweenAndCategory_CategoryName(Mockito.any(), Mockito.any(), Mockito.any()))
+        Mockito.when(expenseRepository.findExpensesByExpenseDateBetweenAndCategory_CategoryName(any(), any(), any()))
                 .thenReturn(expensesForGroceriesCategory);
         Mockito.when(expenseMapper.toDtoList(expensesForGroceriesCategory)).thenReturn(expenseDtos);
+        Mockito.when(categoryRepository.findExpenseCategoryByCategoryName(any())).thenReturn(expenseCategory);
 
         // WHEN
         List<ExpenseDto> result = expenseService.getExpenses(startDate, endDate, categoryName, topN);
@@ -71,7 +83,7 @@ class ExpenseServiceImplTest {
         List<Expense> expenseList = ExpenseFixtures.createExpenses(5);
         List<ExpenseDto> expenseDtos = ExpenseDtoFixtures.createExpenseDtos(5);
 
-        Mockito.when(expenseRepository.findExpenseByExpenseDateBetween(Mockito.any(), Mockito.any()))
+        Mockito.when(expenseRepository.findExpenseByExpenseDateBetween(any(), any()))
                 .thenReturn(expenseList);
         Mockito.when(expenseMapper.toDtoList(expenseList)).thenReturn(expenseDtos);
 
@@ -92,7 +104,7 @@ class ExpenseServiceImplTest {
         List<Expense> expenseList = ExpenseFixtures.createExpenses(7);
         List<ExpenseDto> expenseDtoList = ExpenseDtoFixtures.createExpenseDtos(7);
 
-        Mockito.when(expenseRepository.findExpenseByExpenseDateBetween(Mockito.any(), Mockito.any()))
+        Mockito.when(expenseRepository.findExpenseByExpenseDateBetween(any(), any()))
                 .thenReturn(expenseList);
         Mockito.when(expenseMapper.toDtoList(expenseList)).thenReturn(expenseDtoList);
 

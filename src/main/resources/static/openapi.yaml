@@ -504,6 +504,10 @@ components:
     Expense: 
       type: object
       properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
         amount:
           type: number
           example: 198.99

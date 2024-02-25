@@ -26,7 +26,7 @@ public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "expense_id")
-    private Long expenseId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -51,12 +51,12 @@ public class Expense {
         if (o == null || getClass() != o.getClass()) return false;
 
         Expense expense = (Expense) o;
-        return Objects.equals(this.expenseId, expense.expenseId) &&
+        return Objects.equals(this.id, expense.id) &&
                 Objects.equals(this.amount, expense.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.expenseId, this.amount);
+        return Objects.hash(this.id, this.amount);
     }
 }

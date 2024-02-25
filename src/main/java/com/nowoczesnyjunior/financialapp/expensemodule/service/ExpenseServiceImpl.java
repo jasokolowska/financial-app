@@ -56,7 +56,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         User user = userRepository.findByUsername(activeUsername);
         expense.setUser(user);
 
-        if (expenseDto.getCategory().getId() == null || !categoryExists(expenseDto.getCategory())) {
+        if (expenseDto.getCategory() == null || expenseDto.getCategory().getId() == null || !categoryExists(expenseDto.getCategory())) {
             throw new CategoryNotFoundException();
         }
 
@@ -74,7 +74,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         Optional<Expense> oldExpenceOptional = expenseRepository.findById(expenseId);
         if (oldExpenceOptional.isPresent()) {
             Expense expense = expenseMapper.toModel(expenseDto);
-            expense.setExpenseId(expenseId);
+            expense.setId(expenseId);
             expense.setUser(oldExpenceOptional.get().getUser());
             Expense savedExpense = expenseRepository.save(expense);
             return expenseMapper.toDto(savedExpense);
@@ -99,9 +99,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     private static String getActiveUserName() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        return authentication.getName();
-        return "empty user string";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 
 
