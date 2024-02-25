@@ -34,9 +34,12 @@ tbd
 
 **Server:**
 - Java 17
-- Spring Boot
+- Spring Boot 3
 - PostgreSql
-- Swagger
+- Springdoc Openapi
+- Mapstruct
+- Liquibase
+- Docker
 &nbsp;
 ## Installation
 
@@ -52,8 +55,10 @@ You will need the following things properly installed on your computer.
 - `cd financial-app`
 
 ### Running / Development
+- run command `docker-compose build`
 - run command `docker-compose up`
-- you can checkout basic endpoint at http://localhost:8080/hello-world
+- you can checkout all available and working endpoints at http://localhost:8080/swagger-ui/index.html
+- for each enpoint you can test how it works with 'Try it out' button and it will conect with backend side (it works as Postman - you have to provide a correct body execute the request and the you will get the response form the backend)
 &nbsp;
 ## Special thanks
 
