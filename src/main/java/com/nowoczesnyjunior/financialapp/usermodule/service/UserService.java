@@ -4,12 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.nowoczesnyjunior.financialapp.openapi.model.TokenDto;
 import com.nowoczesnyjunior.financialapp.usermodule.exception.UserCreationException;
-import com.nowoczesnyjunior.financialapp.usermodule.model.User;
+import com.nowoczesnyjunior.financialapp.usermodule.model.AppUser;
 import com.nowoczesnyjunior.financialapp.usermodule.model.UserRole;
 import com.nowoczesnyjunior.financialapp.usermodule.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -57,12 +56,12 @@ public class UserService {
         }
         try {
             saveNewUser(username, password);
-        } catch (DataAccessException e) {
+        } catch (RuntimeException e) {
             throw new UserCreationException();
         }
     }
     private void saveNewUser(String username, String password) {
-        userRepository.save(User.builder()
+        userRepository.save(AppUser.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .enabled(true)

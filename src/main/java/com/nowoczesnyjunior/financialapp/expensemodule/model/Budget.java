@@ -1,7 +1,7 @@
 package com.nowoczesnyjunior.financialapp.expensemodule.model;
 
 
-import com.nowoczesnyjunior.financialapp.usermodule.model.User;
+import com.nowoczesnyjunior.financialapp.usermodule.model.AppUser;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,7 +35,7 @@ public class Budget {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private AppUser user;
 
     @Column(name = "budget_name", nullable = false)
     private String budgetName;

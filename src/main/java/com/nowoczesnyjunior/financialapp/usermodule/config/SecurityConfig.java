@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private String secret;
+    private final String secret;
 
     public SecurityConfig(@Value("${jwt.secret}") String secret) {
         this.secret = secret;

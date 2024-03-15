@@ -8,7 +8,7 @@ import com.nowoczesnyjunior.financialapp.expensemodule.repository.CategoryReposi
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.ExpenseRepository;
 import com.nowoczesnyjunior.financialapp.openapi.model.CategoryDto;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
-import com.nowoczesnyjunior.financialapp.usermodule.model.User;
+import com.nowoczesnyjunior.financialapp.usermodule.model.AppUser;
 import com.nowoczesnyjunior.financialapp.usermodule.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.ObjectNotFoundException;
@@ -53,7 +53,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     public ExpenseDto addExpense(ExpenseDto expenseDto) {
         Expense expense = expenseMapper.toModel(expenseDto);
         String activeUsername = getActiveUserName();
-        User user = userRepository.findByUsername(activeUsername);
+        AppUser user = userRepository.findByUsername(activeUsername);
         expense.setUser(user);
 
         if (expenseDto.getCategory() == null || expenseDto.getCategory().getId() == null || !categoryExists(expenseDto.getCategory())) {

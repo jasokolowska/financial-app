@@ -2,7 +2,7 @@ package com.nowoczesnyjunior.financialapp.expensemodule.utils;
 
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.ExpenseCategory;
-import com.nowoczesnyjunior.financialapp.usermodule.model.User;
+import com.nowoczesnyjunior.financialapp.usermodule.model.AppUser;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.math.BigDecimal;
@@ -40,7 +40,7 @@ public class ExpenseFixtures {
         return expenses;
     }
 
-    private static Expense createExpense(User user, ExpenseCategory category, BigDecimal amount,
+    private static Expense createExpense(AppUser user, ExpenseCategory category, BigDecimal amount,
                                          LocalDateTime expenseDate, String description) {
         Expense expense = new Expense();
         expense.setUser(user);
@@ -51,10 +51,10 @@ public class ExpenseFixtures {
         return expense;
     }
 
-    private static User createSampleUser() {
+    private static AppUser createSampleUser() {
         // Create and return a sample User object
         // You can set user properties as needed
-        return new User();
+        return new AppUser();
     }
 
     private static ExpenseCategory createSampleCategory() {

@@ -413,12 +413,18 @@ paths:
       tags:
         - user
       summary: Logs out current logged in user session
-      description: ''
+      description: |
+        Logs out the currently logged-in user session.
+
+        After accessing this endpoint, the client should handle the logout process by removing the JWT token from local storage or wherever it is stored.
+
+        No action is required on the server-side for JWT-based authentication during logout.
       operationId: logoutUser
-      parameters: []
+      parameters: [ ]
       responses:
         default:
           description: successful operation
+
   /user/{username}:
     get:
       tags:

@@ -4,12 +4,10 @@ import com.nowoczesnyjunior.financialapp.expensemodule.model.Budget;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -18,7 +16,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements Serializable {
+public class AppUser implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -58,7 +56,7 @@ public class User implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        User user = (User) o;
+        AppUser user = (AppUser) o;
         return Objects.equals(this.userId, user.userId) &&
                 Objects.equals(this.lastName, user.lastName);
     }

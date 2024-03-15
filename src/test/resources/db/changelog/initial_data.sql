@@ -2,12 +2,12 @@
 --changeset jasokolowska:test_1
 INSERT INTO users (user_id, username, password, first_name, last_name, enabled)
 VALUES
-    ((SELECT COALESCE(MAX(user_id), 0) + 1 FROM users), 'john_doe', 'password123', 'John', 'Doe', true),
-    ((SELECT COALESCE(MAX(user_id), 0) + 2 FROM users), 'jane_smith', 'pass456', 'Jane', 'Smith', true),
-    ((SELECT COALESCE(MAX(user_id), 0) + 3 FROM users), 'bob_jones', 'secret789', 'Bob', 'Jones', true);
+    ((SELECT COALESCE(MAX(user_id), 0) + 1 FROM users), 'john_doe@gmail.com', '$2a$10$fxU4L6dP3uWWUpLbHYo.YOy.cH.7xVYdkJO2KIMrAVwSkgyrcA9YS', 'John', 'Doe', true),
+    ((SELECT COALESCE(MAX(user_id), 0) + 2 FROM users), 'jane_smith@gmail.com', '$2a$10$fxU4L6dP3uWWUpLbHYo.YOy.cH.7xVYdkJO2KIMrAVwSkgyrcA9YS', 'Jane', 'Smith', true),
+    ((SELECT COALESCE(MAX(user_id), 0) + 3 FROM users), 'bob_jones@gmail.com', '$2a$10$fxU4L6dP3uWWUpLbHYo.YOy.cH.7xVYdkJO2KIMrAVwSkgyrcA9YS', 'Bob', 'Jones', true);
 
 --changeset jasokolowska:test_2
-INSERT INTO authorities (username, authority) values ('john_doe','ROLE_USER'), ('jane_smith','ROLE_USER'), ('bob_jones','ROLE_USER');
+INSERT INTO authorities (username, authority) values ('john_doe@gmail.com','ROLE_USER'), ('jane_smith@gmail.com','ROLE_USER'), ('bob_jones@gmail.com','ROLE_USER');
 
 --changeset jasokolowska:test_3
 INSERT INTO expense_categories (category_name)
