@@ -32,7 +32,7 @@ class ExpenseControllerTest extends IntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser(username = "john_doe")
+    @WithMockUser(username = "john_doe@gmail.com")
     void shouldReturnExpenseDtoWhenExpenseSuccessfullySaved() throws Exception {
         // GIVEN
         ExpenseDto expenseDto = ExpenseDtoFixtures.createExpenseDtos(1).get(0);

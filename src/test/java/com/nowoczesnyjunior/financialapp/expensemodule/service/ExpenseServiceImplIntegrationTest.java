@@ -92,7 +92,7 @@ class ExpenseServiceImplIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "john_doe")
+    @WithMockUser(username = "john_doe@gmail.com")
     void onAddNewExpenseWithoutCategoryItShouldReturnExpense() {
         // GIVEN
         CategoryDto categoryDto = new CategoryDto();
