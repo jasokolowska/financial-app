@@ -1,5 +1,6 @@
 package com.nowoczesnyjunior.financialapp.expensemodule.exception;
 
+import com.nowoczesnyjunior.financialapp.common.GlobalExceptionHandler;
 import com.nowoczesnyjunior.financialapp.openapi.model.ApiResponseDto;
 import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -38,8 +39,7 @@ class GlobalExceptionHandlerTest {
     @Test
     void  shouldReturnNotFound() {
         ObjectNotFoundException objectNotFoundException = mock(ObjectNotFoundException.class);
-        when(objectNotFoundException.getEntityName()).thenReturn("Entity");
-        when(objectNotFoundException.getIdentifier()).thenReturn(123);
+        when(objectNotFoundException.getMessage()).thenReturn("Entity with the given Id (123) not found.");
 
         ResponseEntity<ApiResponseDto> responseEntity = globalExceptionHandler.handleEntityNotFoundException(objectNotFoundException);
 

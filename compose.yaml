@@ -23,7 +23,7 @@ services:
       - POSTGRES_PASSWORD=admin
       - POSTGRES_USER=admin
     ports:
-      - 8080:8080
+      - 8089:8080
     links:
       - finance-postgres
 

@@ -8,10 +8,12 @@ import com.nowoczesnyjunior.financialapp.expensemodule.repository.CategoryReposi
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.ExpenseRepository;
 import com.nowoczesnyjunior.financialapp.openapi.model.CategoryDto;
 import com.nowoczesnyjunior.financialapp.openapi.model.ExpenseDto;
-import com.nowoczesnyjunior.financialapp.usermodule.model.User;
+import com.nowoczesnyjunior.financialapp.usermodule.model.AppUser;
 import com.nowoczesnyjunior.financialapp.usermodule.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.ObjectNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,13 +30,13 @@ public class ExpenseServiceImpl implements ExpenseService {
     private final UserRepository userRepository;
     private final ExpenseMapper expenseMapper;
 
-    LocalDateTime defaultStartDate = LocalDateTime.of(1970, 01, 01, 00, 00);
-    LocalDateTime defaultEndDate = LocalDate.now().atStartOfDay();
+    private static final LocalDateTime DEFAULT_START_DATE = LocalDateTime.of(1970, 1, 1, 0, 0);
+    private static final LocalDateTime DEFAULT_END_DATE = LocalDate.now().atStartOfDay();
 
     @Override
     public List<ExpenseDto> getExpenses(String startDate, String endDate, String categoryName, Integer topN) {
-        LocalDateTime startLocalDate = startDate != null ? getLocalDateTime(startDate) : defaultStartDate;
-        LocalDateTime endLocalDate = endDate != null ? getLocalDateTime(endDate) : defaultEndDate;
+        LocalDateTime startLocalDate = startDate != null ? getLocalDateTime(startDate) : DEFAULT_START_DATE;
+        LocalDateTime endLocalDate = endDate != null ? getLocalDateTime(endDate) : DEFAULT_END_DATE;
         List<Expense> expenses;
 
         if (categoryName != null) {
@@ -49,14 +51,14 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public ExpenseDto addExpense(ExpenseDto expenseDto) {
-        if (expenseDto.getCategory().getId() == null || !categoryExists(expenseDto.getCategory())) {
+        Expense expense = expenseMapper.toModel(expenseDto);
+        String activeUsername = getActiveUserName();
+        AppUser user = userRepository.findByUsername(activeUsername);
+        expense.setUser(user);
+
+        if (expenseDto.getCategory() == null || expenseDto.getCategory().getId() == null || !categoryExists(expenseDto.getCategory())) {
             throw new CategoryNotFoundException();
         }
-
-        Expense expense = expenseMapper.toModel(expenseDto);
-        // TODO: get active user from usermodule
-        User user = userRepository.findAll().get(0);
-        expense.setUser(user);
 
         Expense savedExpense = expenseRepository.save(expense);
         return expenseMapper.toDto(savedExpense);
@@ -72,7 +74,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         Optional<Expense> oldExpenceOptional = expenseRepository.findById(expenseId);
         if (oldExpenceOptional.isPresent()) {
             Expense expense = expenseMapper.toModel(expenseDto);
-            expense.setExpenseId(expenseId);
+            expense.setId(expenseId);
             expense.setUser(oldExpenceOptional.get().getUser());
             Expense savedExpense = expenseRepository.save(expense);
             return expenseMapper.toDto(savedExpense);
@@ -94,6 +96,11 @@ public class ExpenseServiceImpl implements ExpenseService {
         if (!categoryExists(categoryName)) {
             throw new CategoryNotFoundException();
         }
+    }
+
+    private static String getActiveUserName() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 
 
