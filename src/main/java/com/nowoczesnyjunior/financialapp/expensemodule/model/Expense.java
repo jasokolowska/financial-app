@@ -1,6 +1,6 @@
 package com.nowoczesnyjunior.financialapp.expensemodule.model;
 
-import com.nowoczesnyjunior.financialapp.usermodule.model.User;
+import com.nowoczesnyjunior.financialapp.usermodule.model.AppUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +15,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -27,11 +26,11 @@ public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "expense_id")
-    private Long expenseId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private AppUser user;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -52,12 +51,12 @@ public class Expense {
         if (o == null || getClass() != o.getClass()) return false;
 
         Expense expense = (Expense) o;
-        return Objects.equals(this.expenseId, expense.expenseId) &&
+        return Objects.equals(this.id, expense.id) &&
                 Objects.equals(this.amount, expense.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.expenseId, this.amount);
+        return Objects.hash(this.id, this.amount);
     }
 }
