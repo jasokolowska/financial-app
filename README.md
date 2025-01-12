@@ -1,5 +1,5 @@
 <p>
-    <img src="https://img.shields.io/github/last-commit/jasokolowska/financial-app/main" alt="Last update">
+    <img src="https://img.shields.io/github/last-commit/jasokolowska/financial-app/develop" alt="Last update">
     <img src="https://img.shields.io/github/contributors/jasokolowska/financial-app" alt="Number of contributors">
     <img src="https://img.shields.io/github/forks/jasokolowska/financial-app" alt="Number of forks">
     <img src="https://img.shields.io/github/stars/jasokolowska/financial-app" alt="Number of stars">
