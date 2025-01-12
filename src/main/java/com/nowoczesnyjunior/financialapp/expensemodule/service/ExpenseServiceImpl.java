@@ -4,6 +4,7 @@ import com.nowoczesnyjunior.financialapp.expensemodule.exception.CategoryNotFoun
 import com.nowoczesnyjunior.financialapp.expensemodule.exception.InvalidDateException;
 import com.nowoczesnyjunior.financialapp.expensemodule.mapper.ExpenseMapper;
 import com.nowoczesnyjunior.financialapp.expensemodule.model.Expense;
+import com.nowoczesnyjunior.financialapp.expensemodule.model.ExpenseCategory;
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.CategoryRepository;
 import com.nowoczesnyjunior.financialapp.expensemodule.repository.ExpenseRepository;
 import com.nowoczesnyjunior.financialapp.openapi.model.CategoryDto;

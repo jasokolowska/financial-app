@@ -7,7 +7,7 @@
 
 # Financial App
 
-Full-stack app for manag personal budget. Allows you to enter new budgets and enter expenses divided into categories.
+Full-stack app for managing personal budget. Allows you to enter new budgets and enter expenses divided into categories.
 &nbsp;
 
 ## Features
@@ -28,9 +28,7 @@ tbd
 ## Tech Stack
 
 **Client:**
-- React
-- SCSS
-- HTML
+- postponed
 
 **Server:**
 - Java 17
